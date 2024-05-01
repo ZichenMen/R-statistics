@@ -1,0 +1,87 @@
+---
+title: "Lab 2"
+author: "Zichen Men"
+output: html_document
+---
+
+## Problem 1: Simulating Coin Tosses and More
+# (a) Probability of getting a head in a fair coin
+```{r}
+coin <- c(1, 2)  
+random_tosses <- sample(coin, 200, replace = TRUE)
+head_count <- sum(random_tosses == 1)
+head_prob <- head_count / length(random_tosses)
+print(paste("Probability of getting a head:", head_prob))
+```
+
+# (b) Probability of getting a 3 in a biased die
+```{r}
+die <- c(1, 3, 3, 4, 4, 6)
+die_tosses <- sample(die, 200, replace = TRUE)
+three_count <- sum(die_tosses == 3)
+three_prob <- three_count / length(die_tosses)
+print(paste("Probability of getting a 3:", three_prob))
+```
+
+# (c) Probability of getting a red Ace in a fair standard deck
+```{r}
+deck <- rep(1:52, each = 1)  
+draws <- sample(deck, 200, replace = TRUE)
+red_ace_count <- sum(draws == 1)
+red_ace_prob <- red_ace_count / length(draws)
+print(paste("Probability of getting a red Ace:", red_ace_prob))
+```
+
+
+## Problem 2: Rolling a Die 600 Times
+# Rolling a die 600 times
+```{r}
+die <- 1:6
+roll_results <- sample(die, 600, replace = TRUE)
+freq_table <- table(roll_results) / length(roll_results)
+print(freq_table)
+```
+
+# Histogram of outcomes
+```{r}
+hist(roll_results, breaks = 6, main = "Histogram of Die Rolls", xlab = "Die Faces", ylab = "Frequency")
+```
+
+
+## Problem 3: Simulating M&M Colors
+```{r}
+set.seed(270)
+colors <- c("Yellow", "Red", "Orange", "Brown", "Green", "Blue")
+probs <- c(0.14, 0.13, 0.20, 0.13, 0.16, 0.24)
+mms <- sample(colors, 200, replace = TRUE, prob = probs)
+```
+
+# (a) Probability of not getting green
+```{r}
+not_green_count <- sum(mms != "Green")
+not_green_prob <- not_green_count / length(mms)
+print(paste("Probability of not getting Green:", not_green_prob))
+```
+
+# (b) Probability of getting Red, Orange, or Yellow
+```{r}
+desired_colors <- sum(mms %in% c("Red", "Orange", "Yellow"))
+desired_prob <- desired_colors / length(mms)
+print(paste("Probability of getting Red, Orange, or Yellow:", desired_prob))
+```
+
+# (c) Probability of getting at least one Blue in a selection of four M&Ms
+```{r}
+set_trial <- replicate(200, sample(colors, 4, replace = TRUE, prob = probs))
+blue_presence <- apply(set_trial, 2, function(x) "Blue" %in% x)
+blue_prob <- sum(blue_presence) / length(blue_presence)
+print(paste("Probability of getting at least one Blue in four M&Ms:", blue_prob))
+```
+
+# (d) Probability of getting all six colors in a selection of six M&Ms
+```{r}
+six_trial <- replicate(200, sample(colors, 6, replace = TRUE, prob = probs))
+all_colors_presence <- apply(six_trial, 2, function(x) length(unique(x)) == 6)
+all_colors_prob <- sum(all_colors_presence) / length(all_colors_presence)
+print(paste("Probability of getting all six colors in six M&Ms:", all_colors_prob))
+```
