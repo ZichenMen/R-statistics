@@ -1,0 +1,271 @@
+---
+title: "Lab 3"
+author: "Zichen Men"
+output: html_document
+---
+
+## Problem 1: Expected Values of Investments
+
+A venture capitalist is considering three different investment opportunities. We are tasked with calculating the expected value of each investment to assist in decision-making.
+
+### Investment A (Software Company)
+
+Investment A has the following profit probabilities:
+- A 9% chance of returning $7,000,000 profit
+- A 39% chance of returning $2,000,000 profit
+- A 52% chance of losing $1,000,000
+
+```{r} 
+# Defining the values and probabilities for Investment A
+values_A <- c(7000000, 2000000, -1000000)
+probabilities_A <- c(0.09, 0.39, 0.52)
+
+# Calculating the expectation for Investment A
+expectation_A <- sum(values_A * probabilities_A)
+expectation_A
+```
+
+### Investment B (Hardware Company)
+
+Investment B has the following profit probabilities:
+- A 10% chance of returning $11,000,000 profit
+- A 43% chance of returning $2,000,000 profit
+- A 47% chance of losing $1,000,000
+
+```{r}
+# Defining the values and probabilities for Investment B
+values_B <- c(11000000, 2000000, -1000000)
+probabilities_B <- c(0.10, 0.43, 0.47)
+
+# Calculating the expectation for Investment B
+expectation_B <- sum(values_B * probabilities_B)
+expectation_B
+```
+
+### Investment C (Biotech Firm)
+
+Investment C has the following profit probabilities:
+- A 15% chance of returning $5,000,000 profit
+- An 18% chance of no profit or loss ($0)
+- A 67% chance of losing $1,000,000
+
+```{r}
+# Defining the values and probabilities for Investment C
+values_C <- c(5000000, 0, -1000000)
+probabilities_C <- c(0.15, 0.18, 0.67)
+
+# Calculating the expectation for Investment C
+expectation_C <- sum(values_C * probabilities_C)
+expectation_C
+```
+## Problem 2: Multiple Choice Quiz Probabilities
+
+Robin has to guess the answers in a multiple choice quiz consisting of 5 questions, each with 4 options (a, b, c, d). We calculate the probabilities for various scenarios regarding her guesses:
+
+### (a) Probability the first question she gets right is the 3rd question
+```{r}
+# Each question has a 1/4 chance of being correct, and she must get the first two wrong.
+prob_a <- (3/4)^2 * (1/4)
+prob_a
+```
+
+### (b) Probability she gets exactly 3 or exactly 4 questions right
+```{r}
+# Using binomial distribution to find the probabilities for exactly 3 and exactly 4 correct answers
+prob_b3 <- dbinom(3, size = 5, prob = 1/4)
+prob_b4 <- dbinom(4, size = 5, prob = 1/4)
+prob_b_total <- prob_b3 + prob_b4
+prob_b_total
+```
+
+### (c) Probability she gets the majority of the questions right
+```{r}
+# "Majority" means more than half, so 3 or more out of 5
+prob_c <- sum(dbinom(3:5, size = 5, prob = 1/4))
+prob_c
+```
+
+### Exponential Distribution Example
+```{r}
+# Demonstrating exponential distribution functions
+pexp_0_4_lower <- pexp(0.4, 4, lower.tail = TRUE)
+pexp_0_4_upper <- pexp(0.4, 4, lower.tail = FALSE)
+qexp_0_8 <- qexp(0.8, 4, lower.tail = TRUE)
+random_exp_values <- rexp(5, 4)
+pexp_0_4_lower
+pexp_0_4_upper
+qexp_0_8
+random_exp_values
+```
+
+
+## Problem 3: Analogue Signal Analysis
+
+We analyze an analogue signal measured at a detector, which follows a normal distribution with a mean of 200 microvolts and a variance of 256.
+
+### (a) Probability the signal exceeds 224 μV
+```{r}
+prob_a <- pnorm(224, mean = 200, sd = 16, lower.tail = FALSE)
+prob_a
+```
+
+### (b) Probability the signal is between 186 μV and 224 μV
+```{r}
+prob_b <- pnorm(224, mean = 200, sd = 16) - pnorm(186, mean = 200, sd = 16)
+prob_b
+```
+
+### (c) Microvoltage below which 25% of the signals are
+```{r}
+quantile_c <- qnorm(0.25, mean = 200, sd = 16)
+quantile_c
+```
+
+### (d) Probability signal is less than 240 μV, given it's greater than 210 μV
+```{r}
+prob_d <- (pnorm(240, mean = 200, sd = 16) - pnorm(210, mean = 200, sd = 16)) / pnorm(240, mean = 200, sd = 16, lower.tail = FALSE)
+prob_d
+```
+
+### (e) Estimate the interquartile range
+```{r}
+IQR_estimate <- qnorm(0.75, mean = 200, sd = 16) - qnorm(0.25, mean = 200, sd = 16)
+IQR_estimate
+```
+
+### (f) Probability signal is less than 220 μV, given it's greater than 210 μV
+```{r}
+prob_f <- (pnorm(220, mean = 200, sd = 16) - pnorm(210, mean = 200, sd = 16)) / pnorm(220, mean = 200, sd = 16, lower.tail = FALSE)
+prob_f
+```
+
+### (g) Probability a signal > 200 μV is in fact > 220 μV
+```{r}
+prob_g <- pnorm(220, mean = 200, sd = 16, lower.tail = FALSE) / pnorm(200, mean = 200, sd = 16, lower.tail = FALSE)
+prob_g
+```
+
+## Problem 4: Dice Game Earnings Analysis
+
+Given a dice game with specific payouts and penalties, we will analyze the expected outcomes and variance in winnings.
+
+### (a) Probability Distribution Table for X and P(X)
+```{r}
+# Define the earnings and their probabilities
+earnings <- c(-8, 5, 10)
+probabilities <- c(3/6, 3/6, 1/6)  # Outcomes: 1,2; 3,4,5; 6
+
+# Create a probability distribution table
+probability_distribution <- data.frame(Earnings = earnings, Probability = probabilities)
+probability_distribution
+```
+
+### (b) Expected Winning Calculation using a For Loop
+```{r}
+# Calculate expected winnings using a for loop
+expected_winnings <- 0
+for (i in 1:length(earnings)) {
+  expected_winnings <- expected_winnings + earnings[i] * probabilities[i]
+}
+expected_winnings
+```
+
+### (c) Variance of Winning Calculation using a For Loop
+```{r}
+# Calculate variance of winnings using a for loop
+mean_winnings <- expected_winnings
+variance_winnings <- 0
+for (i in 1:length(earnings)) {
+  variance_winnings <- variance_winnings + probabilities[i] * (earnings[i] - mean_winnings)^2
+}
+variance_winnings
+```
+
+### (d) Simulation of 20 Independent People Playing the Game
+```{r}
+# Simulation of 20 people playing the game
+set.seed(2024)  # Setting a random seed for reproducibility
+simulated_winnings <- replicate(20, sum(sample(earnings, size = 1, prob = probabilities, replace = TRUE)))
+total_winnings <- sum(simulated_winnings)
+total_winnings
+```
+
+
+## Problem 5: Hypergeometric Distribution in Quality Control
+
+An office supply store manager checks a box of 23 pens, including 5 defective ones. The manager selects 3 pens randomly.
+
+### (a) Probability Distribution for the Number of Defective Pens
+```{r}
+total_pens <- 23
+defective_pens <- 5
+selected_pens <- 3
+
+# X values: 0 to minimum(selected_pens, defective_pens)
+x_values <- 0:min(selected_pens, defective_pens)
+# Calculating the probabilities
+probabilities <- dhyper(x_values, defective_pens, total_pens - defective_pens, selected_pens)
+data.frame(X = x_values, Probability = probabilities)
+```
+
+### (b) Expected Number of Defective Pens
+```{r}
+expected_defectives <- sum(x_values * probabilities)
+expected_defectives
+```
+
+### (c) Expected Value from Hypergeometric Formula
+```{r}
+expected_formula <- selected_pens * defective_pens / total_pens
+expected_formula
+```
+
+## Problem 6: Law of Large Numbers Illustration
+
+### (a) Averaging Geometric Random Variables
+```{r}
+# Illustrating LLN with geometric random variables
+set.seed(2024)  # Ensuring reproducibility
+n <- 1000  # Number of random variables
+p <- 0.5   # Probability of success
+geometric_vars <- rgeom(n, prob = p) + 1  # Geometric distribution starts at 1
+average_geometric <- cumsum(geometric_vars) / (1:n)
+plot(average_geometric, type = 'l', main = "LLN with Geometric Random Variables", xlab = "Number of Trials", ylab = "Running Average")
+abline(h = 1/p, col = "red")
+```
+
+### (b) Averaging Exponential Random Variables
+```{r}
+# Illustrating LLN with exponential random variables
+lambda <- 1  # Rate parameter
+exponential_vars <- rexp(n, rate = lambda)
+average_exponential <- cumsum(exponential_vars) / (1:n)
+plot(average_exponential, type = 'l', main = "LLN with Exponential Random Variables", xlab = "Number of Trials", ylab = "Running Average")
+abline(h = 1/lambda, col = "blue")
+```
+
+## Problem 7: Central Limit Theorem Demonstrations
+
+### (a) Geometric Random Variables
+```{r}
+set.seed(2024)  # Ensuring reproducibility
+samples <- 1000  # Number of samples for each graph
+sample_size <- c(10, 30, 50, 100, 200)  # Different sizes of each sample
+p <- 0.5  # Probability for geometric distribution, define it according to your case
+par(mfrow=c(3,2))  # Setting up plotting area for 5 graphs
+
+for (n in sample_size) {
+  means <- replicate(samples, mean(rgeom(n, prob = p) + 1))
+  hist(means, probability = TRUE, main = paste("n =", n), xlab = "Sample Means", breaks = 40)
+  curve(dnorm(x, mean = 1/p, sd = sqrt((1-p) / (p^2 * n))), add = TRUE, col = "red")
+}
+```
+
+### (b) Exponential Random Variables
+```{r}
+for (n in sample_size) {
+  means <- replicate(samples, mean(rexp(n, rate = lambda)))
+  hist(means, probability = TRUE, main = paste("n =", n), xlab = "Sample Means", breaks = 40)
+  curve(dnorm(x, mean = 1/lambda, sd = sqrt(1 / (lambda^2 * n))), add = TRUE, col = "blue")
+}
+```
