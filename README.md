@@ -1,2 +1,2 @@
 # R-statistics
-Statistics practices using R
+Statistics using R
